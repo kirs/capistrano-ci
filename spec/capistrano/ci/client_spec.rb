@@ -1,19 +1,22 @@
 require 'spec_helper'
 
-class CIConfig < Hash
-  alias_method :exists?, :key?
-end
-
 describe Capistrano::CI::Client do
-  let(:config) do
-    config = CIConfig.new
-    config[:ci_client] = ci_client
-    config[:ci_repository] = "rails/rails"
-    config[:ci_access_token] = "token"
-    config
-  end
+  let(:client){ described_class.new }
 
-  let(:client){ described_class.new(config) }
+  before do
+    allow(client).to receive(:fetch) do |key|
+      case key.to_s
+      when "branch"
+        "master"
+      when "ci_repository"
+        "rails/rails"
+      when "ci_client"
+        ci_client
+      when "ci_access_token"
+        "token"
+      end
+    end
+  end
 
   describe ".register" do
     before{ described_class.register "new_client", Object, [:ci_new_setting] }

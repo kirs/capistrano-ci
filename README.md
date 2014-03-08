@@ -10,6 +10,8 @@ capistrano-ci is extension for capistrano that allows you to check status of you
   * CircleCi: [https://circleci.com](https://circleci.com)
   * Semaphore: [https://semaphoreapp.com](https://semaphoreapp.com)
 
+The master branch of Capistrano::CI is capable with Capistrano 3. To use it with Capistrano 2, please check the `cap2` branch.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -40,16 +42,16 @@ Variables list:
 
 Setup ci_client and ci_repository variables in your deployment script:
 
-     set(:ci_client){ "travis" }
-     set(:ci_repository){ "organisation-or-user/repository-name" }
+     set :ci_client, "travis"
+     set :ci_repository, "organisation-or-user/repository-name"
 
 ### Pro Account of Travis-CI:
 
 Additional to ci_client and ci_repository setup ci_access_token:
 
-     set(:ci_client){ "travis_pro" }
-     set(:ci_repository){ "organisation-or-user/repository-name" }
-     set(:ci_access_token){ "your-pro-access-token" }
+     set :ci_client, "travis_pro"
+     set :ci_repository, "organisation-or-user/repository-name"
+     set :ci_access_token, "your-pro-access-token"
 
 Read explaination [how to obtain Travis-CI access token](http://railsware.com/blog/2013/09/10/capistrano-recipe-for-checking-travis-ci-build-status/). To have more information about Travis-CI access token follow [this blog post](http://about.travis-ci.org/blog/2013-01-28-token-token-token).
 
@@ -57,28 +59,24 @@ Read explaination [how to obtain Travis-CI access token](http://railsware.com/bl
 
 Setup ci_client, ci_repository and ci_access_token in your deployment script:
 
-     set(:ci_client){ "circle" }
-     set(:ci_repository){ "organisation-or-user/repository-name" }
-     set(:ci_access_token){ "your-circle-access-token" }
+     set :ci_client, "circle"
+     set :ci_repository, "organisation-or-user/repository-name"
+     set :ci_access_token, "your-circle-access-token"
 
 ### Semaphore:
 
 Setup ci_client, ci_repository and ci_access_token in your deployment script:
 
-    set(:ci_client){ "semaphore" }
-    set(:ci_repository){ "organisation-or-user/repository-name" }
-    set(:ci_access_token){ "your-semaphore-access-token" }
+    set :ci_client, "semaphore"
+    set :ci_repository, "organisation-or-user/repository-name"
+    set :ci_access_token, "your-semaphore-access-token"
 
 ### Enable ci:verify task:
 
-     before 'deploy' do
-       ci.verify
-     end
+     before :deploy, "ci:verify"
 
      # or in case of using capistrano-patch:
-     before 'patch:create' do
-       ci.verify
-     end
+     before "patch:create", "ci.verify"
 
 ## Contributing
 

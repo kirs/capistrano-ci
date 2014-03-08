@@ -18,14 +18,6 @@ module Capistrano
         end
       end
 
-
-      def initialize(config)
-        @config = self.class.settings.inject({}) do |result, key|
-          result[key] = config[key] if config.exists?(key)
-          result
-        end
-      end
-
       def state(branch)
         client.state(branch)
       end
@@ -37,17 +29,21 @@ module Capistrano
       private
 
       def client
-        @client ||= find_and_initialize_client or raise(NotFound, "can't find CI client with name '#{@config[:ci_client]}'")
+        @client ||= find_and_initialize_client or raise(NotFound, "can't find CI client with name '#{fetch(:ci_client)}'")
       end
 
       def find_and_initialize_client
-        client_settings = self.class.clients[@config[:ci_client]]
+        client_settings = self.class.clients[fetch(:ci_client)]
 
         client_settings[:client_class].new(prepare_client_attributes(client_settings)) if client_settings
       end
 
       def prepare_client_attributes(settings)
-        @config.select{ |key, _| settings[:attributes].include?(key) }
+        result = {}
+        settings[:attributes].map do |key|
+          result[key] = fetch(key)
+        end
+        result
       end
 
     end
